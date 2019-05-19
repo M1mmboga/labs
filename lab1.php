@@ -7,6 +7,7 @@ session_start();
 
 	$con = new DBConnector();
 	$db = $con->DBConnect();
+
 //code to insert data
 if (isset($_POST['btn-save'])) {
 	# code...
@@ -17,11 +18,12 @@ if (isset($_POST['btn-save'])) {
 	$password = $_POST['Password'];
 	$name = $_FILES['fileToUpload']['name'];
 
-
+	$utc_timestamp = $_POST['utc_timestamp'];
+	//$offset = $_POST['time_zone_offset'];
 
   
 	//user object
-	$user = new User($first_name,$last_name,$city_name,$username,$password,$name);
+	$user = new User($first_name,$last_name,$city_name,$username,$password,$name,$utc_timestamp);
 
 	if ($user->validateForm())
 	 {
@@ -95,7 +97,8 @@ if (isset($_POST['btn-save'])) {
 	<link rel="stylesheet" type="text/css" href="validate.css">
 	
 	<!--include the jquery file for timezone thingys -->
-	<script src="jquery-3.3.1.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 	<script type="text/javascript" src="timezone.js"></script>
 
@@ -159,16 +162,18 @@ if (isset($_POST['btn-save'])) {
 				<td><input type="password" name="Password" placeholder="Password"></td>
 			</tr>
 			<tr>
-				<td>Profile Image: <input type="file" name="fileToUpload" id="fileToUpload"></td>
+				<td>Profile Image: <input type="file" name="fileToUpload" id="fileToUpload" required></td>
 			</tr>
 
 			<tr>
 				<td><button class="btn btn-primary" type="submit" name="btn-save"><strong>SAVE</strong></button></td>
 			</tr>
 
+			<tr>
 				<input type="hidden" name="utc_timestamp" id="utc_timestamp" value=""/>
 				<input type="hidden" name="time_zone_offset" id="time_zone_offset" value=""/>
-		
+			
+			</tr>
 			<tr>
 				<td><a href="login.php">Click here to check your account</a></td>
 			</tr>

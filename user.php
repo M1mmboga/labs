@@ -21,8 +21,12 @@ class User implements Crud,Authenticator
 
 	private $db;
 
+	//private $userTime;
 
-	function __construct($first_name="",$last_name="",$city_name="",$username="",$password="",$imageUpload="") //construct has arguments, means at some point i will give the properties values myself
+
+	function __construct($first_name="",$last_name="",$city_name="",$username="",$password="",$imageUpload=""
+	//,$userTime=""
+	) //construct has arguments, means at some point i will give the properties values myself
 	{
 		# code...
 		$this->first_name = $first_name;
@@ -33,6 +37,8 @@ class User implements Crud,Authenticator
 		$this->password = $password;
 
 		$this->imageUpload = $imageUpload;
+
+		//$this->userTime = $userTime;
 
 		$this->db = new DBConnector();
 	}
@@ -65,6 +71,18 @@ class User implements Crud,Authenticator
 		return $this->password;
 	}
 
+	/*
+	public function setTimeStamp($userTime)
+	{
+		$this->userTime = $userTime;
+	}
+
+	public function getTimeStamp()
+	{
+		return $this->userTime;
+	}*/
+
+	
 	//set userid
 	public function setUserId ($user_id)
 	{
@@ -83,6 +101,13 @@ class User implements Crud,Authenticator
 
 	public function save()
 	{
+
+		//$newTime = $this->userTime;
+
+		//$theTime = time();
+		//$theNewTime = date("d-m-Y h:i:s", $theTime);
+		//$mynewTime = $this->theNewTime;
+
 
 		$fn = $this->first_name;// values to be entered
 		$ln = $this->last_name;
@@ -185,10 +210,7 @@ class User implements Crud,Authenticator
 	public function readAll($table)
 	{
 		$query = "SELECT * FROM ".$table;	
-		// if(!$this->db->query($query)) {
-		// 	echo $this->db->error;
-		// 	echo 'error..........';
-		// }
+		
 
 		$conn = $this->db->DBConnect();
 		if($stmt = $conn->prepare($query))	
