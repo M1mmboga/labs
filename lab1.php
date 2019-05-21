@@ -17,13 +17,14 @@ if (isset($_POST['btn-save'])) {
 	$username = $_POST['Username'];
 	$password = $_POST['Password'];
 	$name = $_FILES['fileToUpload']['name'];
-
 	$utc_timestamp = $_POST['utc_timestamp'];
-	//$offset = $_POST['time_zone_offset'];
+	$offset = $_POST['time_zone_offset'];
+
+	echo "offset -->". $offset. "....";
 
   
 	//user object
-	$user = new User($first_name,$last_name,$city_name,$username,$password,$name,$utc_timestamp);
+	$user = new User($first_name,$last_name,$city_name,$username,$password,$name,$utc_timestamp,$offset);
 
 	if ($user->validateForm())
 	 {
@@ -65,19 +66,18 @@ if (isset($_POST['btn-save'])) {
 		$user = new User;
 		$result = $user->readAll("user");
 
-		echo "<table>";
 		
 		while($row = $result->fetch_array()) {
 
-			echo "<tr>";
-			echo "<td> ".$row['id']. "</td>";
+			echo "<tr><p>";
+			echo "<td>".$row['id']."</td>";
 			echo "<td> ".$row['username']."</td>";
 			echo "<td> ".$row['first_name']."</td>";
 			echo "<td> ".$row['last_name']."</td>";
 			echo "<td> ".$row['user_city']."</td>";
-			echo "<td> ".$row['myFileName']."</td>";
+			echo "<td> ".$row['date']."</td>";
 
-			echo "</tr>";
+			echo "</p></tr>";
 		}
 
 		echo "</table>";
@@ -113,10 +113,14 @@ if (isset($_POST['btn-save'])) {
 </head>
 <body>
 
+<?php
+	$me = time();
+	$meme = date("m-d-Y H:i:s",$me);
+	echo $meme;
+?>
 <div class="container">
 
 	<span class="span"><h1>Enter Data in the table below</h1></span>
-
 
 	<form  method="post" name="user_details" id="user_details" enctype="multipart/form-data" onsubmit="return validateForm()" action="<?=$_SERVER['PHP_SELF']?>" >
 		<table class="table table-sm">
@@ -164,16 +168,16 @@ if (isset($_POST['btn-save'])) {
 			<tr>
 				<td>Profile Image: <input type="file" name="fileToUpload" id="fileToUpload" required></td>
 			</tr>
-
-			<tr>
-				<td><button class="btn btn-primary" type="submit" name="btn-save"><strong>SAVE</strong></button></td>
-			</tr>
-
 			<tr>
 				<input type="hidden" name="utc_timestamp" id="utc_timestamp" value=""/>
 				<input type="hidden" name="time_zone_offset" id="time_zone_offset" value=""/>
 			
 			</tr>
+
+			<tr>
+				<td><button class="btn btn-primary" type="submit" name="btn-save"><strong>SAVE</strong></button></td>
+			</tr>
+
 			<tr>
 				<td><a href="login.php">Click here to check your account</a></td>
 			</tr>

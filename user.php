@@ -19,14 +19,16 @@ class User implements Crud,Authenticator
 
 	private $imageUpload;
 
+	private $utc_timestamp;
+	private $offset;
+
 	private $db;
 
-	//private $userTime;
 
 
-	function __construct($first_name="",$last_name="",$city_name="",$username="",$password="",$imageUpload=""
-	//,$userTime=""
-	) //construct has arguments, means at some point i will give the properties values myself
+	function __construct($first_name="",
+	$last_name="",$city_name="",$username="",
+	$password="",$imageUpload="",$utc_timestamp="",$offset="") //construct has arguments, means at some point i will give the properties values myself
 	{
 		# code...
 		$this->first_name = $first_name;
@@ -38,7 +40,9 @@ class User implements Crud,Authenticator
 
 		$this->imageUpload = $imageUpload;
 
-		//$this->userTime = $userTime;
+		$this->utc_timestamp = $utc_timestamp;
+		$this->offset = $offset;
+
 
 		$this->db = new DBConnector();
 	}
@@ -102,13 +106,6 @@ class User implements Crud,Authenticator
 	public function save()
 	{
 
-		//$newTime = $this->userTime;
-
-		//$theTime = time();
-		//$theNewTime = date("d-m-Y h:i:s", $theTime);
-		//$mynewTime = $this->theNewTime;
-
-
 		$fn = $this->first_name;// values to be entered
 		$ln = $this->last_name;
 		$city = $this->city_name; 
@@ -129,15 +126,19 @@ class User implements Crud,Authenticator
 		
 		if( in_array($imageFileType,$extensions_arr) ){
 
-		$query = "INSERT INTO user(first_name,last_name,user_city,username,password,myFileName) VALUES (?,?,?,?,?,?)"; //SQL QUERY TEMPLATE
+		$query = "INSERT INTO user(first_name,last_name,user_city,username,password,myFileName,offset,date)
+		 VALUES (?,?,?,?,?,?,?,NOW())"; //SQL QUERY TEMPLATE
 
 
-		$stmt = $this->db->DBConnect()->prepare($query); //PREPARE THE QUERY IN PS
+		$db = $this->db->DBConnect();
+		$stmt = $db->prepare($query); //PREPARE THE QUERY IN PS
 
-		$stmt->bind_param("ssssss",$fn,$ln,$city,$uname,$pword,$img);//bind parameters and specify the data types
+		$stmt->bind_param("ssssssi",$fn,$ln,$city,$uname,$pword,$img,$this->offset);//bind parameters and specify the data types
 
-		$sql = $stmt->execute();// execute the query
-
+		// execute the query
+		if($sql = $stmt->execute()) {
+			$db->error;
+		}
 		move_uploaded_file($_FILES['fileToUpload']['tmp_name'],$target_dir.$name);
 
 		return $sql;

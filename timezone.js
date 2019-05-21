@@ -1,6 +1,9 @@
 $(document).ready(function()
 {
-    var offset = new Date().getTimeZoneOffset();
+    //returns time ahead or behind of GMT
+    var offset = new Date().getTimezoneOffset();
+
+    //returns time from 1970 jan
     var timestamp = new Date().getTime();
 
     //convert our time to universal coordinated time 
@@ -8,4 +11,7 @@ $(document).ready(function()
 
     $('#time_zone_offset').val(offset);
     $('#utc_timestamp').val(utc_timestamp);
+
+    console.log($('#time_zone_offset').val());
 });
+
