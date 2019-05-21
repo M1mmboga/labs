@@ -61,7 +61,7 @@ class ApiHandler
         //save the incoming order
         $con = $db->DBConnect();
         $res = mysqli_query($con,"INSERT INTO orders(order_name,units,unit_price,order_status) VALUES('$this->meal_name','$this->meal_units','$this->unit_price','$this->status')");
-
+     
     }
 
 
