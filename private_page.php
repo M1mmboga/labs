@@ -1,65 +1,111 @@
 <?php 
-session_start();
-include_once 'DBConnector.php';
+ session_start();
 
-if (!isset($_SESSION['username']))
- {
-	# code...
-	header("Location:login.php");
-}
+ include_once "DBConnector.php";
+ function fetchUserApiKey()
+        {
+            $db = new DBConnector();
+           // $con = $this->db->DBConnect();
+            $username = $_SESSION['username'];
+            $res = mysqli_query($db->DBConnect(), "SELECT id from user where user.username='$username'") or die("ERROR ON SAVE:" . mysqli_error($db));
+            $row = mysqli_fetch_array($res);
+            $user_id = $row['id'];
+            if ($user_id) {
+                $res = mysqli_query($db->DBConnect(), "SELECT api_key from api_keys where api_keys.user_id='$user_id'") or die("ERROR ON SAVE:" . mysqli_error($db));
+                $row = mysqli_fetch_array($res);
+                return $row[0];
+            } else {
+                echo 'No such user exists';
+                return null;
+            }}
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST')
- {
+// if (!isset($_SESSION['username']))
+//  {
+// 	# code...
+// 	header("Location:login.php");
+// }
+// include_once 'DBConnector.php';
 
-	# code...
-	//do not allow users via a url
-	header('HTTP/1.0 403 Forbidden');
-	echo "Access is forbidden";
-} else {
-	$api_key = null;
-	$api_key = generateApiKey(64);//will be 64 characters long
-	header('Content-type: application/json');
-	echo generateApiKey($api_key);
+// if ($_SERVER['REQUEST_METHOD'] !== 'POST' )
+// {
 	
-}
-	function generateApiKey($str_length)
-	{
-		//base 62 map
-		$chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	
+// 	//$api_key = null;
+// 	$api_key = generateApiKey(64);//will be 64 characters long
+// 	header('Content-type: application/json');
+// 	echo generateApiKey($api_key);
+// 	exit(generateResponse($api_key));
 
-		$bytes = openssl_random_pseudo_bytes(3*$str_length/4+1);
+	
+// }
+// 	function generateApiKey($str_length)
+// 	{
+// 		//base 62 map
+// 		$chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-		$repl = unpack("C2", $bytes);
+// 		$bytes = openssl_random_pseudo_bytes(3*$str_length/4+1);
 
-		$first = $chars[$repl[1]%62];
-		$second = $chars[$repl[2]%62];
-		return strtr(substr(base64_encode($bytes),0,$str_length),'+/',"$first$second");
+// 		$repl = unpack('C2', $bytes);
 
-	}
+// 		$first = $chars[$repl[1] % 62];
+// 		$second = $chars[$repl[2] % 62];
+// 		return strtr(substr(base64_encode($bytes), 0, $str_length),'+/',"$first$second");
 
-	function saveApiKey()
-	{
-		//will save the api key for the user, true if saved else false
+// 	}
 
-	}
+// 	function saveApiKey($api_key)
+// 	{
+// 		//will save the api key for the user, true if saved else false
+// 		$db = new DBConnector();
+// 		$db = $this->db->DBConnect();
+// 		$username = $_SESSION['username'];
+// 		$res = mysqli_query($db, "SELECT id from user where user.username='$username'") or die("ERROR ON SAVE:" . mysqli_error($db));
+// 		$row = mysqli_fetch_array($res);
+// 		$user_id = $row['id'];
+// 		if ($user_id) {
+// 			$q = mysqli_query($db, "SELECT 1 FROM api_keys WHERE user_id = '$user_id'");
+// 			$exists = count(mysqli_fetch_array($q)) > 0;
+// 			if ($exists) {
+// 				$res = mysqli_query($db, "UPDATE api_keys SET api_key='$api_key' WHERE user_id='$user_id'") or die("ERROR ON SAVE:" . mysqli_error($db));
+// 			} else {
+// 				$res = mysqli_query($db, "INSERT INTO api_keys(user_id, api_key) VALUES('$user_id', '$api_key') ") or die("ERROR ON SAVE:" . mysqli_error($db));
+// 			}
+// 			return $res;
+// 		} else {
+// 			return false;
+// 		}
+// 	}
 
-	function generateResponse($api_key)
-	{
-		if (saveApiKey())
-		 {
-			# code...
-			$res = ['success' => 1, 'message' => $api_key];
-		}else {
-			# code...
-			$res = ['success' => 0, 'message' => 'Something is wrong.Please generate the api key again.'];
-		}
-		return json_encode($res);
-	}
+// 	function generateResponse($api_key)
+// 	{
+// 		if (saveApiKey($api_key))
+// 		 {
+// 			# code...
+// 			$res = ['success' => 1, 'message' => $api_key];
+// 		}else {
+// 			# code...
+// 			$res = ['success' => 0, 'message' => 'Something is wrong.Please generate the api key again.'];
+// 		}
+// 		return json_encode($res);
+// 	}
 
-	function fetchUserApiKey()
-	{
-
-	}
+// 	function fetchUserApiKey()
+// 	{
+// 		$db = new DBConnector();
+// 		$db = $this->db->DBConnect();
+// 		$username = $_SESSION['username'];
+// 		$res = mysqli_query($db, "SELECT id from user where user.username='$username'") or die("ERROR ON SAVE:" . mysqli_error($db));
+// 		$row = mysqli_fetch_array($res);
+// 		$user_id = $row['id'];
+// 		if ($user_id) {
+// 			$res = mysqli_query($db, "SELECT api_key from api_keys where api_keys.user_id='$user_id'") or die("ERROR ON SAVE:" . mysqli_error($db));
+// 			$row = mysqli_fetch_array($res);
+// 			return $row[0];
+// 		} else {
+// 			echo 'No such user exists';
+// 			return null;
+// 		}
+// 	}
 ?>
 
 <!DOCTYPE html>
@@ -88,10 +134,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST')
 </style>
 </head>
 
-<body>
+<body style="margin:5px;">
+	<p id="line1">Welcome, <?php echo $_SESSION['username']; ?></p>
 	<p id="line1">This is a private page</p>
 	<p id="line1">We want to protect it</p>
-	<button class="btn btn-primary">Logout<a href="logout.php"></a></button><br><br>
+	<a href="logout.php" class="btn btn-primary">Logout</a><br><br>
 
 	Create an api for users to order items from external systems.
 	Feature for users to generate api key by clicking a button.<br>
@@ -103,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST')
 	if your api key is already in use by running applications, generating a new api key will 
 	stop the application from running.<br>
 
-	<textarea name="api_key" id="api_key" cols="100" rows="2" readonly><?php echo fetchUserApiKey(); ?></textarea>
+	<textarea name="api_key" id="api_key" cols="100" rows="4" readonly><?php echo fetchUserApiKey(); ?></textarea>
 
 	<br>
 	Service description

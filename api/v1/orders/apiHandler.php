@@ -1,6 +1,6 @@
 <?php 
 
-include_once "DBConnector.php";
+include_once "../../../DBConnector.php";
 
 class ApiHandler
 {
@@ -11,6 +11,11 @@ class ApiHandler
     private $user_api_key;
     private $db;
 
+    function __construct()
+    {
+        $this->db = new DBConnector();
+        
+    }
     public function setMealName($meal_name)
     {
         $this->meal_name = $meal_name;
@@ -20,7 +25,7 @@ class ApiHandler
         return $this->meal_name;
     }
 
-    public function $setMealUnits($meal_units)
+    public function setMealUnits($meal_units)
     {
         $this->meal_units = $meal_units;
     }
@@ -63,8 +68,27 @@ class ApiHandler
         $res = mysqli_query($con,"INSERT INTO orders(order_name,units,unit_price,order_status) VALUES('$this->meal_name','$this->meal_units','$this->unit_price','$this->status')");
      
     }
+    public function checkOrderStatus()
+    {
 
+    }
 
+    public function fetchAllOrders()
+    {
+
+    }
+
+    public function checkApiKey()
+    {
+        //checks if the supplied api key is in db
+        //if yes give true else false
+        return true;
+    }
+
+    public function checkContentType()
+    {
+
+    }
 
 }
 
