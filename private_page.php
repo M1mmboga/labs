@@ -7,11 +7,11 @@
             $db = new DBConnector();
            // $con = $this->db->DBConnect();
             $username = $_SESSION['username'];
-            $res = mysqli_query($db->DBConnect(), "SELECT id from user where user.username='$username'") or die("ERROR ON SAVE:" . mysqli_error($db));
+            $res = mysqli_query($db->DBConnect(), "SELECT id from user where user.username='$username'") or die("ERROR ON SAVE:" . mysqli_error($db->DBConnect()));
             $row = mysqli_fetch_array($res);
             $user_id = $row['id'];
             if ($user_id) {
-                $res = mysqli_query($db->DBConnect(), "SELECT api_key from api_keys where api_keys.user_id='$user_id'") or die("ERROR ON SAVE:" . mysqli_error($db));
+                $res = mysqli_query($db->DBConnect(), "SELECT api_key from api_keys where api_keys.user_id='$user_id'") or die("ERROR ON SAVE:" . mysqli_error($db->DBConnect()));
                 $row = mysqli_fetch_array($res);
                 return $row[0];
             } else {
@@ -150,7 +150,7 @@
 	if your api key is already in use by running applications, generating a new api key will 
 	stop the application from running.<br>
 
-	<textarea name="api_key" id="api_key" cols="100" rows="4" readonly><?php echo fetchUserApiKey(); ?></textarea>
+	<textarea name="api_key" id="api_key" cols="100" rows="5" readonly><?php echo fetchUserApiKey(); ?></textarea>
 
 	<br>
 	Service description
