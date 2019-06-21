@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $order_status = $_POST['order_status'];
         
             $con = new DBConnector();
-            $con = $this->con->DBConnect();
+            $conn = $con->DBConnect();
 
             $api->setMealName($name_of_food);
-                        $api->setMealUnit($number_of_units);
-                        $api->setUnitPrice($unit_price);
-                        $api->setStatus($order_status);
-                        $res = $api->createOrder();
+            $api->setMealUnits($number_of_units);
+            $api->setUnitPrice($unit_price);
+            $api->setStatus($order_status);
+            $res = $api->createOrder();
 
             if ($res) {
                 # code...
@@ -42,10 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     # code...
-    //Rtrieve order status
-}else{
-    //soory not supporting this for now
-}
+    
+    $order_status = $api->checkOrderStatus($_GET["order_id"]);
+    echo json_encode([
+        'order_status' => $order_status
+    ]);
+
+
+    // sorry not supporting this for now
 
 // function responseHandler($success, $message, $data = null)
 // {
@@ -80,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 //             // TODO: server side check if all values exist
 //             $api->setMealName($name_of_food);
-//             $api->setMealUnit($units);
+//             $api->setMealUnits($units);
 //             $api->setUnitPrice($unit_price);
 //             $api->setStatus($order_status);
 //             $res = $api->createOrder();
@@ -102,8 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //         responseHandler(0, 'Wrong Api key');
 //     }
 //     $db->closeDatabase();
-// } else {
-//     responseHandler(0, 'No support for this at the moment');
 // }
+
+}
+ else {
+    responseHandler(0, 'No support for this at the moment');
+}
 
 

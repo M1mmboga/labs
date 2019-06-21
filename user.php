@@ -3,6 +3,8 @@
 include "Crud.php";
 include "authenticator.php";
 include "DBConnector.php";
+
+// session_start();
 /**
 * 
 */
@@ -74,17 +76,6 @@ class User implements Crud,Authenticator
 	{
 		return $this->password;
 	}
-
-	/*
-	public function setTimeStamp($userTime)
-	{
-		$this->userTime = $userTime;
-	}
-
-	public function getTimeStamp()
-	{
-		return $this->userTime;
-	}*/
 
 	
 	//set userid
@@ -172,6 +163,7 @@ class User implements Crud,Authenticator
 			 {
 				# code...
 				$found = true;
+				return $row['id'];
 			}
 		 }
 		
@@ -183,10 +175,12 @@ class User implements Crud,Authenticator
 
 	public function login()
 	{
-		if ($this->isPasswordCorrect())
+		if ($user_id = $this->isPasswordCorrect())
 		 {
 			# code...
 			//password is correct so we load the protected page
+			session_start();
+			$_SESSION['id'] = $user_id;
 			header("Location:private_page.php");
 		}
 	}
@@ -299,6 +293,7 @@ class User implements Crud,Authenticator
 		// session_start();
 		$_SESSION['form-errors'] = $error;
 	}
+
 
 }
 

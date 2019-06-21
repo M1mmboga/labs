@@ -64,12 +64,21 @@ class ApiHandler
     public function createOrder()
     {
         //save the incoming order
-        $con = $db->DBConnect();
+        $con = $this->db->DBConnect();
         $res = mysqli_query($con,"INSERT INTO orders(order_name,units,unit_price,order_status) VALUES('$this->meal_name','$this->meal_units','$this->unit_price','$this->status')");
      
     }
-    public function checkOrderStatus()
+    public function checkOrderStatus($id)
     {
+        $con = $this->db->DBConnect();
+        $query = "SELECT order_status FROM orders WHERE order_id=?";
+        $stmt = $con->prepare($query);
+
+        $stmt->bind_param('i',$id);
+        $stmt->execute();
+
+        $order_status = $stmt->get_result()->fetch_assoc()['order_status'];
+        return $order_status;
 
     }
 
