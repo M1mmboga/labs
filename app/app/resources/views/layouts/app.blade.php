@@ -59,6 +59,8 @@
                                 <a class="dropdown-item" href="home">
                                         {{ __('Home') }}
                                     </a>
+
+                                    
                                     
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

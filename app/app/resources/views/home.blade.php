@@ -17,8 +17,10 @@
                     You are logged in!
                     Proceed below:
                     <ul>
-                        <li><a href="/car">View Cars</a></li>
-                        <li><a href="registerCar">Register Cars</a></li>
+                        <li><a href="/car">Show All Cars</a></li>
+                        <li><a href="registerCar">Register a Car</a></li>
+                        <li><a href="/reviews">Make a Review</a></li>
+                        <li><a href="/myreviews">Show All Reviews</a></li>
                     </ul>
                 </div>
             </div>

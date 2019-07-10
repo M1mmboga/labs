@@ -16,6 +16,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
+Route::get('/reviews', function () {
+    return view('car.addreview');
+});
+
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -29,3 +36,9 @@ Route::post('/car', 'CarController@newcar');
 Route::post('newcar','CarController@newcar');//routes for all crud resource functions
 
 Route::get('registerCar','CarController@registerCar');// register a new car
+
+Route::post('myreview','ReviewsController@store');
+
+Route::get('/myreviews','ReviewsController@index');
+
+Route::get('/search','ReviewsController@search');
